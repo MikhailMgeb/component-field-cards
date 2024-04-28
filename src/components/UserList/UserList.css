@@ -12,13 +12,15 @@
 
 .UserList-ButtonRefresh {
     margin-right: 60px;
-    padding: 4px 0px 4px 0px;
-    border-radius: 16px;
-    color: #cf7b5a;
-    line-height: 20px;
+    padding: 4px 0;
+
     font-size: 14px;
-    border: none;
+    line-height: 20px;
+    color: #cf7b5a;
+
     background-color: inherit;
+    border: none;
+    border-radius: 16px;
 }
 
 .UserList-ButtonRefresh:active {
@@ -26,13 +28,15 @@
 }
 
 .UserList-InputSearch {
-    margin-left: 20px;
     width: 332px;
+    margin-left: 20px;
     padding: 14px 16px 14px 8px;
-    background-color: #1e2027;
-    color: #8c8988;
+
     font-size: 16px;
     line-height: 24px;
+    color: #8c8988;
+
+    background-color: #1e2027;
     border: none;
     border-radius: 16px;
 }

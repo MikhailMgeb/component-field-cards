@@ -1,27 +1,30 @@
 body,
 p {
-  padding: 0;
   margin: 0;
+  padding: 0;
 }
 
 .UserCard {
-  width: 332px;
+  position: relative;
+
   display: flex;
-  gap: 16px;
   flex-direction: column;
+  gap: 16px;
   align-items: flex-start;
   justify-content: space-between;
+
+  width: 332px;
   padding: 10px;
+
   background-color: #1a1c23;
   border-radius: 16px;
-  position: relative;
 }
 
 .UserCard-Avatar {
   display: flex;
   gap: 16px;
-  max-width: 255px;
   align-items: center;
+  max-width: 255px;
 }
 
 .UserCard-Image {
@@ -32,8 +35,8 @@ p {
 
 .UserCard-AvatarName {
   font-family: 'Jura', 'Times New Roman', serif;
-  font-weight: 600;
   font-size: 20px;
+  font-weight: 600;
   line-height: 24px;
   color: #dcd8d3;
 }
@@ -45,14 +48,15 @@ p {
 .UserCard-UserInfo {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
   gap: 16px;
+  align-items: flex-start;
+
   font-family: 'Jura', sans-serif;
 }
 
 .UserCard-Title {
-  font-weight: 500;
   font-size: 12px;
+  font-weight: 500;
   line-height: 20px;
   color: #8c8988;
 }
@@ -60,8 +64,8 @@ p {
 .UserCard-UserPhone,
 .UserCard-UserBirthday,
 .UserCard-UserAddress {
-  font-weight: 500;
   font-size: 14px;
+  font-weight: 500;
   line-height: 20px;
   color: #dcd8d3;
 }
@@ -70,9 +74,11 @@ p {
   position: absolute;
   top: 0;
   right: 0;
-  border-width: 0px 0px 1px 1px;
-  border-radius: 0px 16px 0px 16px;
-  border-color: #ff2c4733;
+
   padding: 10px;
+
   background-color: inherit;
+  border-color: #ff2c4733;
+  border-width: 0 0 1px 1px;
+  border-radius: 0 16px;
 }
