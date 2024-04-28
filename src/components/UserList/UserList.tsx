@@ -1,4 +1,5 @@
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import type { Response, User } from '../UserCard/UserTypes';
 import { UserCard } from '../UserCard/UserCard';
@@ -8,21 +9,40 @@ import { fieldSorting } from '../../utils';
 import './UserList.css';
 
 const UserList = () => {
-    const [value, setValue] = useState('Search');
+    const [isLoading, setIsLoading] = useState(false);
+    const [search, setSearch] = useState('Search');
     const [clicked, setClicked] = useState(false);
     const [userList, setUserList] = useState<User[]>([]);
     const timerRef = useRef<NodeJS.Timeout | null>(null);
 
     useEffect(() => {
+        setIsLoading(true)
         fetch('./data.json')
+            .finally(() => { setIsLoading(true) })
             .then(response => response.json())
             .then((data: Response) => {
                 setUserList(fieldSorting(data.results));
-            });
-    }, [clicked, userList.length === 0])
+                setIsLoading(false);
+            })
+            .catch((error) => console.log(error))
+    }, [clicked]);
 
     const handleRefreshCards = () => {
         setClicked(prev => !prev);
+    }
+
+    const handleInputFocus = () => {
+        if (search === 'Search') {
+            setSearch('');
+            return;
+        }
+    }
+
+    const handleInputBlur = () => {
+        if (search === '') {
+            setSearch('Search');
+            return;
+        }
     }
 
     const handleDelete = (userId: string) => {
@@ -36,6 +56,7 @@ const UserList = () => {
         }
 
         timerRef.current = setTimeout(() => {
+
             const filteredUsers = userList.filter(user =>
                 user.name.toLowerCase().includes(event.target.value.toLowerCase()) ||
                 user.email.toLowerCase().includes(event.target.value.toLowerCase()) ||
@@ -44,16 +65,24 @@ const UserList = () => {
                 user.address.toLowerCase().includes(event.target.value.toLowerCase())
             );
 
+            setIsLoading(false);
             setUserList(filteredUsers);
         }, 300)
 
-        setValue(event.target.value);
+        setSearch(event.target.value);
     }
 
     return (
         <div className={cnUserList()}>
             <div className={cnUserList('Control')}>
-                <input className={cnUserList('InputSearch')} value={value} onChange={handleChangeText} placeholder='Search' />
+                <div className={cnUserList('Search')}>
+                    <input className={cnUserList('InputSearch')}
+                        value={search} onChange={handleChangeText}
+                        onFocus={handleInputFocus}
+                        onBlur={handleInputBlur}
+                    />
+                    {isLoading ? <CircularProgress color="secondary" /> : null}
+                </div>
                 <button className={cnUserList('ButtonRefresh')} onClick={handleRefreshCards}>Refresh Users</button>
             </div>
             <div className={cnUserList('Cards')}>

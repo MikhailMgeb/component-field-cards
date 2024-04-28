@@ -1,4 +1,4 @@
-import type { ResponseUser, user } from './components/UserCard/UserTypes';
+import type { ResponseUser, User } from './components/UserCard/UserTypes';
 
 const formatDate = (dateString: string) => {
     const months = [
@@ -14,8 +14,8 @@ const formatDate = (dateString: string) => {
     return `${day} ${month} ${year}`;
   };
 
-const fieldSorting = (data: ResponseUser[]): user[] => {
-    const sortedData: user[] = [];
+const fieldSorting = (data: ResponseUser[]): User[] => {
+    const sortedData: User[] = [];
 
     for (let card of data) {
         sortedData.push(
