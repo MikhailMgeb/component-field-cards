@@ -1,16 +1,14 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import type { FC, MouseEvent } from 'react';
 import { cnUserCard } from './UserCard.classname';
 import type { UserCardProps } from './UserTypes';
 
-import './UserCard.css'
-
 import IconDelete from '../assets/icon.svg';
+
+import './UserCard.css'
 
 const UserCard: FC<UserCardProps> = ({ user, onDelete }) => {
     const [toggle, setToggle] = useState(false);
-    const deleteButton = useRef(null);
-
     const { id, name, email, phone, birthday, address, avatar } = user;
 
     const handleClick = (event: MouseEvent<HTMLDivElement>) => {
@@ -41,7 +39,7 @@ const UserCard: FC<UserCardProps> = ({ user, onDelete }) => {
                 <p className={cnUserCard('UserAddress')}><strong className={cnUserCard('Title')}>Address</strong> {address}</p>
             </div>
             {toggle ?
-                <button ref={deleteButton} className={cnUserCard('ButtonDelete')}><img src={IconDelete} alt='deleting' />
+                <button className={cnUserCard('ButtonDelete')}><img src={IconDelete} alt='deleting' />
                 </button>
                 :
                 null}
