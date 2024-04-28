@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 
 import { Response, user } from '../UserCard/UserTypes';
 import { UserCard } from '../UserCard/UserCard';
@@ -8,58 +8,67 @@ import { fieldSorting } from '../../utils';
 import './UserList.css';
 
 const UserList = () => {
-    const [value, setValue] = useState('Search');
+    const [search, setSearch] = useState('Search');
     const [clicked, setClicked] = useState(false);
     const [userList, setUserList] = useState<user[]>([]);
+
+    const timerRef = useRef<NodeJS.Timeout | null>(null);
 
     useEffect(() => {
         fetch('./data.json')
             .then(response => response.json())
             .then((data: Response) => {
-                setUserList(fieldSorting(data.results))
+                setUserList(fieldSorting(data.results));
             });
-    }, [clicked])
-
-    console.log(userList.length)
+    }, [clicked]);
 
     const handleRefreshCards = () => {
         setClicked(prev => !prev);
     }
 
     const handleDelete = (userId: string) => {
-        console.log(userId)
         const updatedList = userList.filter(user => user.id !== userId);
         setUserList(updatedList);
     };
 
     const handleInputFocus = () => {
-        if (value === 'Search') {
-            setValue('');
+        if (search === 'Search') {
+            setSearch('');
             return;
         }
     }
 
     const handleInputBlur = () => {
-        if (value === '') {
-            setValue('Search');
+        if (search === '') {
+            setSearch('Search');
             return;
         }
     }
 
     const handleChangeText = (event: ChangeEvent<HTMLInputElement>) => {
-        setValue(event.target.value);
+        if (timerRef.current) {
+            clearTimeout(timerRef.current);
+        }
+
+        timerRef.current = setTimeout(() => {
+            console.log(userList.map((item: any) => {
+                (Object.values(item)).filter((value: any, index) => console.log(value[index]));
+            }))
+        }, 300)
+
+        setSearch(event.target.value);
     }
 
     return (
         <>
             <div className={cnUserList('Control')}>
-                <input className={cnUserList('InputSearch')} value={value} onChange={handleChangeText} onFocus={handleInputFocus} onBlur={handleInputBlur} />
+                <input className={cnUserList('InputSearch')} value={search} onChange={handleChangeText} onFocus={handleInputFocus} onBlur={handleInputBlur} />
                 <button className={cnUserList('ButtonRefresh')} onClick={handleRefreshCards}>Refresh Users</button>
             </div>
             <div className={cnUserList('Cards')}>
-                {userList.map((user, index) => (
-                    <UserCard key={index} user={user} onDelete={handleDelete} />
-                ))}
+                {userList.length > 0 ? userList.map((user, index) => (
+                    <UserCard key={Number(user) + index} user={user} onDelete={handleDelete} />)) : <div>Ничего не найдено</div>
+                }
             </div>
         </>
     );
