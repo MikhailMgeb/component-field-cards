@@ -1,64 +1,68 @@
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 
-import { ResponseUser, user } from '../UserCard/UserTypes';
+import { Response, user } from '../UserCard/UserTypes';
 import { UserCard } from '../UserCard/UserCard';
 import { cnUserList } from './UserList.classname';
+import { fieldSorting } from '../../utils';
 
 import './UserList.css';
 
-const fieldSorting = (data: ResponseUser[]): user[] => {
-    const sortedData = [];
-    for (let card of data) {
-        sortedData.push(
-            {
-                id: card.result.login.uuid,
-                name: card.result.name.first + ' ' + card.result.name.last,
-                email: card.result.email,
-                phone: card.result.name.first,
-                birthday: card.result.dob.date,
-                address: card.result.location.city + ',' + card.result.location.state + ',' + card.result.location.country,
-            }
-        )
-    }
-
-    return sortedData;
-}
-
 const UserList = () => {
+    const [value, setValue] = useState('Search');
+    const [clicked, setClicked] = useState(false);
     const [userList, setUserList] = useState<user[]>([]);
 
     useEffect(() => {
         fetch('./data.json')
             .then(response => response.json())
-            .then((data: ResponseUser[]) => {
-
-                setUserList(fieldSorting(data))
+            .then((data: Response) => {
+                setUserList(fieldSorting(data.results))
             });
-    }, [])
+    }, [clicked])
 
-    console.log(userList)
+    console.log(userList.length)
+
+    const handleRefreshCards = () => {
+        setClicked(prev => !prev);
+    }
 
     const handleDelete = (userId: string) => {
+        console.log(userId)
         const updatedList = userList.filter(user => user.id !== userId);
         setUserList(updatedList);
     };
 
+    const handleInputFocus = () => {
+        if (value === 'Search') {
+            setValue('');
+            return;
+        }
+    }
+
+    const handleInputBlur = () => {
+        if (value === '') {
+            setValue('Search');
+            return;
+        }
+    }
+
+    const handleChangeText = (event: ChangeEvent<HTMLInputElement>) => {
+        setValue(event.target.value);
+    }
+
     return (
-        <div className={cnUserList()}>
-            {userList.map((user, index) => (
-                <UserCard key={index} user={user} onDelete={() => handleDelete} toggle={false} />
-            ))}
-        </div>
+        <>
+            <div className={cnUserList('Control')}>
+                <input className={cnUserList('InputSearch')} value={value} onChange={handleChangeText} onFocus={handleInputFocus} onBlur={handleInputBlur} />
+                <button className={cnUserList('ButtonRefresh')} onClick={handleRefreshCards}>Refresh Users</button>
+            </div>
+            <div className={cnUserList('Cards')}>
+                {userList.map((user, index) => (
+                    <UserCard key={index} user={user} onDelete={handleDelete} />
+                ))}
+            </div>
+        </>
     );
 };
 
-export default UserList;
-
-// const fields: user = {
-//     id: data.login.uuid,
-//     name: data.name.first + ' ' + data.name.last,
-//     email: data.email,
-//     phone: data.name,
-//     birthday: data.dob.date,
-//     address: data.location.street.number,
-// }
+export { UserList }
