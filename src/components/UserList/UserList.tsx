@@ -8,10 +8,9 @@ import { fieldSorting } from '../../utils';
 import './UserList.css';
 
 const UserList = () => {
-    const [search, setSearch] = useState('Search');
+    const [value, setValue] = useState('Search');
     const [clicked, setClicked] = useState(false);
     const [userList, setUserList] = useState<user[]>([]);
-
     const timerRef = useRef<NodeJS.Timeout | null>(null);
 
     useEffect(() => {
@@ -20,7 +19,7 @@ const UserList = () => {
             .then((data: Response) => {
                 setUserList(fieldSorting(data.results));
             });
-    }, [clicked]);
+    }, [clicked, userList.length === 0])
 
     const handleRefreshCards = () => {
         setClicked(prev => !prev);
@@ -32,43 +31,47 @@ const UserList = () => {
     };
 
     const handleInputFocus = () => {
-        if (search === 'Search') {
-            setSearch('');
+        if (value === 'Search') {
+            setValue('');
             return;
         }
     }
 
     const handleInputBlur = () => {
-        if (search === '') {
-            setSearch('Search');
+        if (value === '') {
+            setValue('Search');
             return;
         }
     }
 
     const handleChangeText = (event: ChangeEvent<HTMLInputElement>) => {
-        if (timerRef.current) {
-            clearTimeout(timerRef.current);
-        }
-
+        if(timerRef.current) {}
         timerRef.current = setTimeout(() => {
-            console.log(userList.map((item: any) => {
-                (Object.values(item)).filter((value: any, index) => console.log(value[index]));
-            }))
+            const filteredUsers = userList.filter(user =>
+                user.name.toLowerCase().includes(event.target.value.toLowerCase()) ||
+                user.email.toLowerCase().includes(event.target.value.toLowerCase()) ||
+                user.phone.toLowerCase().includes(event.target.value.toLowerCase()) ||
+                user.birthday.toLowerCase().includes(event.target.value.toLowerCase()) ||
+                user.address.toLowerCase().includes(event.target.value.toLowerCase())
+            );
+
+            setUserList(filteredUsers);
         }, 300)
 
-        setSearch(event.target.value);
+
+        setValue(event.target.value);
     }
 
     return (
         <>
             <div className={cnUserList('Control')}>
-                <input className={cnUserList('InputSearch')} value={search} onChange={handleChangeText} onFocus={handleInputFocus} onBlur={handleInputBlur} />
+                <input className={cnUserList('InputSearch')} value={value} onChange={handleChangeText} onFocus={handleInputFocus} onBlur={handleInputBlur} />
                 <button className={cnUserList('ButtonRefresh')} onClick={handleRefreshCards}>Refresh Users</button>
             </div>
             <div className={cnUserList('Cards')}>
-                {userList.length > 0 ? userList.map((user, index) => (
-                    <UserCard key={Number(user) + index} user={user} onDelete={handleDelete} />)) : <div>Ничего не найдено</div>
-                }
+                {userList.map((user, index) => (
+                    <UserCard key={index} user={user} onDelete={handleDelete} />
+                ))}
             </div>
         </>
     );

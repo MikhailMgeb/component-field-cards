@@ -22,12 +22,12 @@ export type ResponseUser = {
     dob: { date: string };
     phone: string;
     picture: {
-        large: string,
+        large: string;
     }
     location: {
-        city: string,
-        state: string,
-        country: string,
+        city: string;
+        state: string;
+        country: string;
     }
 }
 
