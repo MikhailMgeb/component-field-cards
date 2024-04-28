@@ -17,7 +17,7 @@ const UserList = () => {
 
     useEffect(() => {
         setIsLoading(true)
-        fetch('./data.json')
+        fetch('https://randomuser.me/api/?results=500')
             .finally(() => { setIsLoading(true) })
             .then(response => response.json())
             .then((data: Response) => {
