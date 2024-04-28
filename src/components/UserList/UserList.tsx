@@ -1,4 +1,5 @@
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import CircularProgress from '@mui/material/CircularProgress';
 
 import { Response, user } from '../UserCard/UserTypes';
 import { UserCard } from '../UserCard/UserCard';
@@ -8,18 +9,22 @@ import { fieldSorting } from '../../utils';
 import './UserList.css';
 
 const UserList = () => {
-    const [value, setValue] = useState('Search');
+    const [isLoading, setIsLoading] = useState(false);
+    const [search, setSearch] = useState('Search');
     const [clicked, setClicked] = useState(false);
     const [userList, setUserList] = useState<user[]>([]);
     const timerRef = useRef<NodeJS.Timeout | null>(null);
 
     useEffect(() => {
-        fetch('./data.json')
+        fetch('https://randomuser.me/api/?results=500')
             .then(response => response.json())
             .then((data: Response) => {
                 setUserList(fieldSorting(data.results));
-            });
-    }, [clicked, userList.length === 0])
+                setIsLoading(true);
+            })
+            .finally(() => setIsLoading(false))
+            .catch((error) => console.log(error))
+    }, [clicked]);
 
     const handleRefreshCards = () => {
         setClicked(prev => !prev);
@@ -31,21 +36,24 @@ const UserList = () => {
     };
 
     const handleInputFocus = () => {
-        if (value === 'Search') {
-            setValue('');
+        if (search === 'Search') {
+            setSearch('');
             return;
         }
     }
 
     const handleInputBlur = () => {
-        if (value === '') {
-            setValue('Search');
+        if (search === '') {
+            setSearch('Search');
             return;
         }
     }
 
     const handleChangeText = (event: ChangeEvent<HTMLInputElement>) => {
-        if(timerRef.current) {}
+        if (timerRef.current) {
+            clearTimeout(timerRef.current);
+            setIsLoading(false)
+        }
         timerRef.current = setTimeout(() => {
             const filteredUsers = userList.filter(user =>
                 user.name.toLowerCase().includes(event.target.value.toLowerCase()) ||
@@ -54,18 +62,25 @@ const UserList = () => {
                 user.birthday.toLowerCase().includes(event.target.value.toLowerCase()) ||
                 user.address.toLowerCase().includes(event.target.value.toLowerCase())
             );
-
+            setIsLoading(true)
             setUserList(filteredUsers);
         }, 300)
 
 
-        setValue(event.target.value);
+        setSearch(event.target.value);
     }
 
     return (
         <>
             <div className={cnUserList('Control')}>
-                <input className={cnUserList('InputSearch')} value={value} onChange={handleChangeText} onFocus={handleInputFocus} onBlur={handleInputBlur} />
+                <div className={cnUserList('Search')}>
+                    <input className={cnUserList('InputSearch')}
+                        value={search} onChange={handleChangeText}
+                        onFocus={handleInputFocus}
+                        onBlur={handleInputBlur}
+                    />
+                    {isLoading ? <CircularProgress color="secondary" /> : null}
+                </div>
                 <button className={cnUserList('ButtonRefresh')} onClick={handleRefreshCards}>Refresh Users</button>
             </div>
             <div className={cnUserList('Cards')}>

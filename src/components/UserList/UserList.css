@@ -5,6 +5,12 @@
     padding: 20px;
 }
 
+.UserList-Search {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
 .UserList-Control {
     display: flex;
     justify-content: space-between;
