@@ -1,4 +1,38 @@
-.UserList {
+.UserList-Cards {
     display: flex;
-    
+    flex-wrap: wrap;
+    gap: 16px;
+    padding: 20px;
+}
+
+.UserList-Control {
+    display: flex;
+    justify-content: space-between;
+}
+
+.UserList-ButtonRefresh {
+    margin-right: 60px;
+    padding: 4px 0px 4px 0px;
+    border-radius: 16px;
+    color: #cf7b5a;
+    line-height: 20px;
+    font-size: 14px;
+    border: none;
+    background-color: inherit;
+}
+
+.UserList-ButtonRefresh:active {
+    background-color: #1a1c23;
+}
+
+.UserList-InputSearch {
+    margin-left: 20px;
+    width: 332px;
+    padding: 14px 16px 14px 8px;
+    background-color: #1e2027;
+    color: #8c8988;
+    font-size: 16px;
+    line-height: 24px;
+    border: none;
+    border-radius: 16px;
 }
