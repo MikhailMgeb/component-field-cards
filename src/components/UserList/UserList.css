@@ -10,6 +10,12 @@
     justify-content: space-between;
 }
 
+.UserList-Search {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
 .UserList-ButtonRefresh {
     margin-right: 60px;
     padding: 4px 0;
