@@ -1,6 +1,6 @@
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 
-import { Response, user } from '../UserCard/UserTypes';
+import type { Response, User } from '../UserCard/UserTypes';
 import { UserCard } from '../UserCard/UserCard';
 import { cnUserList } from './UserList.classname';
 import { fieldSorting } from '../../utils';
@@ -10,7 +10,7 @@ import './UserList.css';
 const UserList = () => {
     const [value, setValue] = useState('Search');
     const [clicked, setClicked] = useState(false);
-    const [userList, setUserList] = useState<user[]>([]);
+    const [userList, setUserList] = useState<User[]>([]);
     const timerRef = useRef<NodeJS.Timeout | null>(null);
 
     useEffect(() => {
@@ -30,22 +30,11 @@ const UserList = () => {
         setUserList(updatedList);
     };
 
-    const handleInputFocus = () => {
-        if (value === 'Search') {
-            setValue('');
-            return;
-        }
-    }
-
-    const handleInputBlur = () => {
-        if (value === '') {
-            setValue('Search');
-            return;
-        }
-    }
-
     const handleChangeText = (event: ChangeEvent<HTMLInputElement>) => {
-        if(timerRef.current) {}
+        if (timerRef.current) {
+            clearTimeout(timerRef.current)
+        }
+
         timerRef.current = setTimeout(() => {
             const filteredUsers = userList.filter(user =>
                 user.name.toLowerCase().includes(event.target.value.toLowerCase()) ||
@@ -58,14 +47,13 @@ const UserList = () => {
             setUserList(filteredUsers);
         }, 300)
 
-
         setValue(event.target.value);
     }
 
     return (
-        <>
+        <div className={cnUserList()}>
             <div className={cnUserList('Control')}>
-                <input className={cnUserList('InputSearch')} value={value} onChange={handleChangeText} onFocus={handleInputFocus} onBlur={handleInputBlur} />
+                <input className={cnUserList('InputSearch')} value={value} onChange={handleChangeText} placeholder='Search' />
                 <button className={cnUserList('ButtonRefresh')} onClick={handleRefreshCards}>Refresh Users</button>
             </div>
             <div className={cnUserList('Cards')}>
@@ -73,7 +61,7 @@ const UserList = () => {
                     <UserCard key={index} user={user} onDelete={handleDelete} />
                 ))}
             </div>
-        </>
+        </div>
     );
 };
 

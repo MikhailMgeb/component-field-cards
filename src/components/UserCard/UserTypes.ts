@@ -1,4 +1,4 @@
-export type user = {
+export type User = {
     id: string;
     name: string;
     email: string;
@@ -9,7 +9,7 @@ export type user = {
 }
 
 export type UserCardProps = {
-    user: user;
+    user: User;
     onDelete: (id: string) => void;
 }
 
