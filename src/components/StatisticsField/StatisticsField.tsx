@@ -1,22 +1,9 @@
 import { FC } from 'react';
 import { cnStatisticsField } from './StatisticsField.classname';
+import { StatisticsFieldProps } from './StatisticsTypes';
 
 import './StatisticsField.css';
 
-type StatisticsFieldProps = {
-    users?: number;
-    ages: {
-        firstGroup: number;
-        secondGroup: number;
-        thirdGroup: number;
-        fourthGroup: number;
-        fifthGroup: number;
-    }
-    gender: {
-        male: number;
-        female: number;
-    }
-}
 
 const StatisticsField: FC<StatisticsFieldProps> = ({ users, ages, gender }) => {
 
