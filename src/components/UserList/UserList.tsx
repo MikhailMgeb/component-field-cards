@@ -5,6 +5,7 @@ import type { Response, User } from '../UserCard/UserTypes';
 import { UserCard } from '../UserCard/UserCard';
 import { cnUserList } from './UserList.classname';
 import { fieldSorting } from '../../utils';
+import { StatisticsField } from '../StatisticsField/StatisticsField';
 
 import './UserList.css';
 
@@ -85,10 +86,25 @@ const UserList = () => {
                 </div>
                 <button className={cnUserList('ButtonRefresh')} onClick={handleRefreshCards}>Refresh Users</button>
             </div>
-            <div className={cnUserList('Cards')}>
-                {userList.map((user, index) => (
-                    <UserCard key={index} user={user} onDelete={handleDelete} />
-                ))}
+            <div className={cnUserList('Field')}>
+                <div className={cnUserList('Cards')}>
+                    {userList.map((user, index) => (
+                        <UserCard key={index} user={user} onDelete={handleDelete} />
+                    ))}
+                </div>
+                <StatisticsField
+                    users={0}
+                    ages={{
+                        firstGroup: 0,
+                        secondGroup: 0,
+                        thirdGroup: 0,
+                        fourthGroup: 0,
+                        fifthGroup: 0
+                    }}
+                    gender={{
+                        male: 0,
+                        female: 0
+                    }} />
             </div>
         </div>
     );
