@@ -80,8 +80,6 @@ const getUserStats = (usersData: User[]): Statistics => {
         usersStat.ages[currentGroupAge as Group] += 1;
     }
 
-    console.log(usersStat)
-
     return usersStat;
 }
 
