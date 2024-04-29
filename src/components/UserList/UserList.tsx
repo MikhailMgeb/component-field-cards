@@ -4,8 +4,9 @@ import CircularProgress from '@mui/material/CircularProgress';
 import type { Response, User } from '../UserCard/UserTypes';
 import { UserCard } from '../UserCard/UserCard';
 import { cnUserList } from './UserList.classname';
-import { fieldSorting } from '../../utils';
+import { DEFAULT_VALUE, fieldSorting, getUserStats } from '../../utils';
 import { StatisticsField } from '../StatisticsField/StatisticsField';
+import type { Statistics } from '../StatisticsField/StatisticsTypes';
 
 import './UserList.css';
 
@@ -13,7 +14,10 @@ const UserList = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [search, setSearch] = useState('Search');
     const [clicked, setClicked] = useState(false);
+
     const [userList, setUserList] = useState<User[]>([]);
+    const [userStats, setUserStats] = useState<Statistics>(DEFAULT_VALUE);
+
     const timerRef = useRef<NodeJS.Timeout | null>(null);
 
     useEffect(() => {
@@ -22,7 +26,10 @@ const UserList = () => {
             .finally(() => { setIsLoading(true) })
             .then(response => response.json())
             .then((data: Response) => {
-                setUserList(fieldSorting(data.results));
+                const resultSorted = fieldSorting(data.results);
+                setUserList(resultSorted);
+                setUserStats(getUserStats(resultSorted));
+
                 setIsLoading(false);
             })
             .catch((error) => console.log(error))
@@ -93,18 +100,9 @@ const UserList = () => {
                     ))}
                 </div>
                 <StatisticsField
-                    users={0}
-                    ages={{
-                        firstGroup: 0,
-                        secondGroup: 0,
-                        thirdGroup: 0,
-                        fourthGroup: 0,
-                        fifthGroup: 0
-                    }}
-                    gender={{
-                        male: 0,
-                        female: 0
-                    }} />
+                    users={userStats.users}
+                    ages={userStats.ages}
+                    gender={userStats.gender} />
             </div>
         </div>
     );

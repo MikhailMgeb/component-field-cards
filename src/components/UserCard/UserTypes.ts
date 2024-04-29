@@ -6,6 +6,7 @@ export type User = {
     birthday: string;
     address: string;
     avatar: string;
+    gender: string;
 }
 
 export type UserCardProps = {
@@ -16,6 +17,7 @@ export type UserCardProps = {
 export type ResponseUser = {
     name: { first: string, last: string };
     email: string;
+    gender: string;
     login: {
         uuid: string;
     };
