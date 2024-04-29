@@ -16,7 +16,7 @@ const UserList = () => {
     const [clicked, setClicked] = useState(false);
 
     const [userList, setUserList] = useState<User[]>([]);
-    const [foundUserList, setFoundUserList] = useState<User[]>([]); /////test
+    const [foundUserList, setFoundUserList] = useState<User[]>([]);
 
     const [userStats, setUserStats] = useState<Statistics>(DEFAULT_VALUE);
 
