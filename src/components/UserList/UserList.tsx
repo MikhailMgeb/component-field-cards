@@ -12,10 +12,12 @@ import './UserList.css';
 
 const UserList = () => {
     const [isLoading, setIsLoading] = useState(false);
-    const [search, setSearch] = useState('Search');
+    const [search, setSearch] = useState<string>();
     const [clicked, setClicked] = useState(false);
 
     const [userList, setUserList] = useState<User[]>([]);
+    const [foundUserList, setFoundUserList] = useState<User[]>([]); /////test
+
     const [userStats, setUserStats] = useState<Statistics>(DEFAULT_VALUE);
 
     const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -27,7 +29,10 @@ const UserList = () => {
             .then(response => response.json())
             .then((data: Response) => {
                 const resultSorted = fieldSorting(data.results);
+
                 setUserList(resultSorted);
+                setFoundUserList(resultSorted);
+
                 setUserStats(getUserStats(resultSorted));
 
                 setIsLoading(false);
@@ -39,23 +44,12 @@ const UserList = () => {
         setClicked(prev => !prev);
     }
 
-    const handleInputFocus = () => {
-        if (search === 'Search') {
-            setSearch('');
-            return;
-        }
-    }
-
-    const handleInputBlur = () => {
-        if (search === '') {
-            setSearch('Search');
-            return;
-        }
-    }
-
     const handleDelete = (userId: string) => {
-        const updatedList = userList.filter(user => user.id !== userId);
-        setUserList(updatedList);
+        const updatedFoundList = foundUserList.filter(user => user.id !== userId);
+        const updatedUserList = userList.filter(user => user.id !== userId)
+
+        setFoundUserList(updatedFoundList);
+        setUserList(updatedUserList);
     };
 
     const handleChangeText = (event: ChangeEvent<HTMLInputElement>) => {
@@ -74,7 +68,8 @@ const UserList = () => {
             );
 
             setIsLoading(false);
-            setUserList(filteredUsers);
+
+            setFoundUserList(filteredUsers);
         }, 300)
 
         setSearch(event.target.value);
@@ -86,8 +81,7 @@ const UserList = () => {
                 <div className={cnUserList('Search')}>
                     <input className={cnUserList('InputSearch')}
                         value={search} onChange={handleChangeText}
-                        onFocus={handleInputFocus}
-                        onBlur={handleInputBlur}
+                        placeholder='Search'
                     />
                     {isLoading ? <CircularProgress color="secondary" /> : null}
                 </div>
@@ -95,7 +89,7 @@ const UserList = () => {
             </div>
             <div className={cnUserList('Field')}>
                 <div className={cnUserList('Cards')}>
-                    {userList.map((user, index) => (
+                    {foundUserList.map((user, index) => (
                         <UserCard key={index} user={user} onDelete={handleDelete} />
                     ))}
                 </div>
