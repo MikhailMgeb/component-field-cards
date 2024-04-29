@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { cnStatisticsField } from './StatisticsField.classname';
-import { StatisticsFieldProps } from './StatisticsTypes';
+import type { StatisticsFieldProps } from './StatisticsTypes';
 
 import './StatisticsField.css';
 
