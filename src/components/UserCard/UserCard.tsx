@@ -5,7 +5,7 @@ import type { UserCardProps } from './UserTypes';
 
 import IconDelete from '../assets/icon.svg';
 
-import './UserCard.css'
+import './UserCard.css';
 
 const UserCard: FC<UserCardProps> = ({ user, onDelete }) => {
     const [toggle, setToggle] = useState(false);
